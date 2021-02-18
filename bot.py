@@ -6,15 +6,17 @@ from selenium.webdriver.support import expected_conditions as EC
 import info
 
 # make sure this path is correct
-PATH = "C:\Program Files (x86)\ChromeDriver\chromedriver.exe"
+PATH = "../chromedriver"
 
 driver = webdriver.Chrome(PATH)
 
-RTX3070LINK1 = "https://www.bestbuy.com/site/nvidia-geforce-rtx-3070-8gb-gddr6-pci-express-4-0-graphics-card-dark-platinum-and-black/6429442.p?skuId=6429442"
-RTX3070LINK2 = "https://www.bestbuy.com/site/gigabyte-geforce-rtx-3070-8g-gddr6-pci-express-4-0-graphics-card-black/6437912.p?skuId=6437912"
-XBOXONETEST = "https://www.bestbuy.com/site/microsoft-xbox-one-s-1tb-console-bundle-white/6415222.p?skuId=6415222"
+TEST = True
 
-driver.get(RTX3070LINK1)
+RTX3070LINK1 = "https://www.bestbuy.com/site/nvidia-geforce-rtx-3070-8gb-gddr6-pci-express-4-0-graphics-card-dark-platinum-and-black/6429442.p?skuId=6429442"
+XBOXHEADSET = "https://www.bestbuy.com/site/microsoft-xbox-wireless-headset-for-xbox-series-xs-xbox-one-and-windows-10-black/6453204.p?skuId=6453204"
+XBOXREMOTE = "https://www.bestbuy.com/site/microsoft-xbox-elite-wireless-controller-series-2-for-xbox-one-xbox-series-x-and-xbox-series-s-black/6352703.p?skuId=6352703"
+
+driver.get(XBOXREMOTE)
 
 isComplete = False
 
@@ -38,7 +40,7 @@ while not isComplete:
         driver.get("https://www.bestbuy.com/cart")
 
         checkoutBtn = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/main/div/div[2]/div[1]/div/div/span/div/div[2]/div[1]/section[2]/div/div/div[3]/div/div[1]/button"))
+            EC.presence_of_element_located((By.XPATH, '//*[@id="cartApp"]/div[2]/div[1]/div/div[1]/div[1]/section[2]/div/div/div[3]/div/div[1]/button'))
         )
         checkoutBtn.click()
         print("Successfully added to cart - beginning check out")
@@ -68,16 +70,17 @@ while not isComplete:
         cvvField.send_keys(info.cvv)
         print("Attempting to place order")
 
-        # place order
-        placeOrderBtn = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".button__fast-track"))
-        )
-        placeOrderBtn.click()
+        if not TEST:
+            # place order
+            placeOrderBtn = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, ".button__fast-track"))
+            )
+            placeOrderBtn.click()
 
         isComplete = True
     except:
         # make sure this link is the same as the link passed to driver.get() before looping
-        driver.get(RTX3070LINK1)
+        driver.get(XBOXREMOTE)
         print("Error - restarting bot")
         continue
 
